@@ -32,4 +32,12 @@ public class BowlingTest {
 			bowling.roll(12);
 		}).isInstanceOf(IllegalArgumentException.class);
 	}
+
+	@Test
+	@DisplayName("roll()실행시 전달된 pin개수는 개수당 1점의 score를 획득한다.")
+	void When_ExecuteRoll_then_getScore() {
+		Bowling bowling = new PlaygameBowling();
+		bowling.roll(9);
+		assertThat(bowling.score()).isEqualTo(9);
+	}
 }
