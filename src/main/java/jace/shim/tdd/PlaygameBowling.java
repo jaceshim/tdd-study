@@ -6,6 +6,9 @@ public class PlaygameBowling implements Bowling {
 		if (pin < 0) {
 			throw new IllegalArgumentException();
 		}
+		if (pin > 10) {
+			throw new IllegalArgumentException();
+		}
 		return false;
 	}
 }
