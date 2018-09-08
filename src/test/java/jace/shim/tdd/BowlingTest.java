@@ -40,4 +40,15 @@ public class BowlingTest {
 		bowling.roll(9);
 		assertThat(bowling.score()).isEqualTo(9);
 	}
+
+	@Test
+	@DisplayName("roll()실행하고 score()호출하면 이전에 실행된 roll()를 통해서 획득한 score와 합산된 score를 리턴한다.")
+	void When_ExecuteRoll_And_GetScore_Then_Return_Sum_Previous_Score() {
+		Bowling bowling = new PlaygameBowling();
+		bowling.roll(9);
+		assertThat(bowling.score()).isEqualTo(9);
+
+		bowling.roll(3);
+		assertThat(bowling.score()).isEqualTo(12);
+	}
 }
