@@ -17,8 +17,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * X 스페어 처리시 현재 프레임의 1구의 쓰러드린 핀 개수(score)는 이전 프레임의 score에 합산된다.
  *
  * X 스트라이크 처리시 현재 프레임의 1구/2구 합산 score를  이전 프레임의 score에 합산된다.
- * - 거터/오픈/스페어 처리시 첫번째, 두번째 shot은 동일한 frame이 된다.
- * - 두번 roll하여 스트라이크 처리시 다음 roll은 다른 frame 으로 처리된다.
+ * X 거터/오픈/스페어 처리시 첫번째, 두번째 shot은 동일한 frame이 된다.
+ * X 두번 roll하여 스트라이크 처리시 다음 roll은 다른 frame 으로 처리된다.
  * - 스트라이크 더블 처리시 현재 프레임의 1구/2구 합산 score를 이전전 프레임의 score에 합산된다.
  * - 마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.
  *
@@ -57,7 +57,8 @@ public class BowlingTest {
 	void When_ExecuteRoll_then_getScore() {
 		final Bowling bowling = new PlaygameBowling();
 		bowling.roll(9);
-		assertThat(bowling.score()).isEqualTo(9);
+		bowling.roll(1);
+		assertThat(bowling.score()).isEqualTo(10);
 	}
 
 	@Test
@@ -122,5 +123,17 @@ public class BowlingTest {
 		bowling.roll(STRIKE_PIN_COUNT);
 
 		assertThat(bowling.getCurrentFrame().getFrameNumber()).isEqualTo(2);
+	}
+
+	@Test
+	@DisplayName("스트라이크 더블 처리시 현재 프레임의 1구/2구 합산 score를 이전전 프레임의 score에 합산된다.")
+	void When_StrikeDouble_Then_Return_Append_Score() {
+		final Bowling bowling = new PlaygameBowling();
+		bowling.roll(STRIKE_PIN_COUNT);
+		bowling.roll(STRIKE_PIN_COUNT);
+		bowling.roll(8);
+		bowling.roll(1);
+
+		assertThat(bowling.score()).isEqualTo(56);
 	}
 }
