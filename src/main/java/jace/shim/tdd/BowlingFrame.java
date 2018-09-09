@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class BowlingFrame {
+	private static final int LAST_FRAME_NUMBER = 10;
 	private final int SPARE_SCORE = 10;
 	private final int STRIKE_SCORE = 10;
 
 	private Integer firstScore = null;
 	private Integer secondScore = null;
+	private Integer thirdScore = null;
 	private Integer frameScore = Integer.valueOf(0);
 
 	private final int frameNumber;
@@ -19,24 +21,27 @@ public class BowlingFrame {
 
 	public void shot(int pin) {
 		final Integer integerValue = Integer.valueOf(pin);
-		boolean executeSumFrameScore = false;
+
+
 		if (isFirstShot()) {
 			firstScore = integerValue;
-			if (firstScore.intValue() == STRIKE_SCORE) {
-				executeSumFrameScore = true;
-			}
 		} else {
 			secondScore = integerValue;
-			executeSumFrameScore = true;
 		}
 
-		if (executeSumFrameScore) {
-			frameScore = Arrays.stream(new Integer[] {firstScore, secondScore}).filter(Objects::nonNull)
-				.mapToInt(Integer::intValue).sum();
+		if (isFinishSecondShot()) {
+			thirdScore = integerValue;
 		}
+
+		frameScore = Arrays.stream(new Integer[]{firstScore, secondScore, thirdScore})
+			.filter(Objects::nonNull)
+			.mapToInt(Integer::intValue).sum();
 	}
 
 	public boolean goNextFrame() {
+		if (this.frameNumber == LAST_FRAME_NUMBER) {
+			return false;
+		}
 		return isStrike() || secondScore != null;
 	}
 
@@ -48,11 +53,22 @@ public class BowlingFrame {
 		return getFirstScore() != null && getSecondScore() == null;
 	}
 
+	public boolean isFinishSecondShot() {
+		return getFirstScore() != null && getSecondScore() != null;
+	}
+
 	public boolean isFinishFrame() {
 		if (isFirstShot()) {
 			return false;
 		}
-		return getFirstScore().intValue() == STRIKE_SCORE || getSecondScore() != null;
+		if (this.frameNumber < LAST_FRAME_NUMBER) {
+			return getFirstScore().intValue() == STRIKE_SCORE || getSecondScore() != null;
+		}
+
+		if (getFirstScore().intValue() == STRIKE_SCORE || this.isSpare()) {
+			return getThirdScore() != null;
+		}
+		return false;
 	}
 
 	public boolean isSpare() {
@@ -82,6 +98,10 @@ public class BowlingFrame {
 
 	public Integer getSecondScore() {
 		return this.secondScore;
+	}
+
+	public Integer getThirdScore() {
+		return this.thirdScore;
 	}
 
 	public Integer getFrameScore() {

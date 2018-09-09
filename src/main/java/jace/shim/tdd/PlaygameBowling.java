@@ -4,8 +4,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class PlaygameBowling implements Bowling {
+	public static final int LAST_FRAME_NUMBER = 10;
 
-	private BowlingFrame[] bowlingFrames = new BowlingFrame[10];
+	private BowlingFrame[] bowlingFrames = new BowlingFrame[LAST_FRAME_NUMBER];
 	private int nextFrameNumber = 1;
 	private BowlingFrame currentFrame = null;
 
@@ -28,9 +29,19 @@ public class PlaygameBowling implements Bowling {
 			this.nextFrameNumber = currentFrame.getFrameNumber() + 1;
 		}
 
-		setNextFrameNumber();
+		if (isLastFrame() == false) {
+			setNextFrameNumber();
+		}
 
-		return false;
+		return isFinishGame();
+	}
+
+	private boolean isLastFrame() {
+		return currentFrame.getFrameNumber() == LAST_FRAME_NUMBER;
+	}
+
+	private boolean isFinishGame() {
+		return isLastFrame() && currentFrame.isFinishFrame();
 	}
 
 	private void setBonusScore() {
@@ -107,7 +118,14 @@ public class PlaygameBowling implements Bowling {
 	}
 
 	private boolean isNewFrame() {
-		return currentFrame == null || currentFrame.getFrameNumber() != nextFrameNumber;
+		if (currentFrame == null) {
+			return true;
+		}
+		if (currentFrame.getFrameNumber() == LAST_FRAME_NUMBER) {
+			return false;
+		}
+
+		return currentFrame.getFrameNumber() != nextFrameNumber;
 	}
 
 	private void setNextFrameNumber() {
