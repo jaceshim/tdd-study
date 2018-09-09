@@ -19,14 +19,15 @@ public class PlaygameBowling implements Bowling {
 			throw new IllegalArgumentException();
 		}
 
-		final int shotScore = currentFrame.shot(pin);
-
-		score += shotScore;
+		final boolean isFirstShot = currentFrame.isFirstShot();
+		score += currentFrame.shot(pin);
 
 		if (isNotFirstFrame()) {
 			final BowlingFrame prevFrame = getPrevFrame();
-			if (prevFrame.isSpare()) {
-				score += shotScore;
+			if (prevFrame.isStrike() && currentFrame.isSecondShot()) {
+				score += currentFrame.getFrameScore();
+			} else if (prevFrame.isSpare() && isFirstShot) {
+				score += currentFrame.getFirstScore();
 			}
 		}
 

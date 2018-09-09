@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class BowlingFrame {
 	private final int SPARE_SCORE = 10;
+	private final int STRIKE_SCORE = 10;
 	private final Integer[] shots = new Integer[2];
 	private final int frameNumber;
 
@@ -21,19 +22,39 @@ public class BowlingFrame {
 	}
 
 	public boolean isFirstShot() {
-		return shots[0] == null;
+		return getFirstScore() == null;
 	}
 
 	public boolean isSecondShot() {
-		return shots[1] != null;
+		return getSecondScore() != null;
 	}
 
 	public boolean isSpare() {
-		final int frameSumScore = Arrays.stream(shots).mapToInt(Integer::intValue).sum();
+		final int frameSumScore = Arrays.stream(shots).filter(score -> score != STRIKE_SCORE)
+			.mapToInt(Integer::intValue).sum();
 		return frameSumScore == SPARE_SCORE;
+	}
+
+	public boolean isStrike() {
+		final Integer findStrikeScore = Arrays.stream(shots)
+			.filter(shot -> shot == STRIKE_SCORE).findFirst().orElse(-1);
+
+		return findStrikeScore == -1 ? false : true;
 	}
 
 	public int getFrameNumber() {
 		return this.frameNumber;
+	}
+
+	public Integer getFirstScore() {
+		return shots[0];
+	}
+
+	public Integer getSecondScore() {
+		return shots[1];
+	}
+
+	public Integer getFrameScore() {
+		return getFirstScore() + getSecondScore();
 	}
 }
