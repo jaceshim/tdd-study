@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * X 터기시에 이전/이전전 프레임의 score에 합산처리.
  * X 마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.
  *
- * - 게임종료이후 roll()을 실행하면 InvalidStateException을 던진다.
+ * X 게임종료이후 roll()을 실행하면 InvalidStateException을 던진다.
  */
 public class BowlingTest {
 	 static final int STRIKE_PIN_COUNT = 10;
@@ -160,7 +160,7 @@ public class BowlingTest {
 	}
 
 	@Test
-	@DisplayName("마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.")
+	@DisplayName("마지막 roll()을 실행하면 true를 리턴한다. ")
 	void When_Last_Roll_Then_Return_false() {
 		final Bowling bowling = new PlaygameBowling();
 		bowling.roll(STRIKE_PIN_COUNT);
@@ -172,11 +172,33 @@ public class BowlingTest {
 		bowling.roll(STRIKE_PIN_COUNT);
 		bowling.roll(STRIKE_PIN_COUNT);
 		bowling.roll(STRIKE_PIN_COUNT);
+
 		bowling.roll(STRIKE_PIN_COUNT);
 		bowling.roll(9);
 		final boolean isFinish = bowling.roll(1);
 
 
 		assertThat(isFinish).isTrue();
+	}
+
+	@Test
+	@DisplayName("게임종료이후 roll()을 실행하면 InvalidStateException을 던진다.")
+	void When_Finish_Game_After_ExecuteRoll_Then_Throws_InvalidStateException() {
+		final Bowling bowling = new PlaygameBowling();
+		assertThatThrownBy(() -> {
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(STRIKE_PIN_COUNT);
+			bowling.roll(9);
+			bowling.roll(1);
+			bowling.roll(4);
+		}).isInstanceOf(IllegalStateException.class);
 	}
 }

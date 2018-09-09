@@ -4,9 +4,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class PlaygameBowling implements Bowling {
-	public static final int LAST_FRAME_NUMBER = 10;
-
-	private BowlingFrame[] bowlingFrames = new BowlingFrame[LAST_FRAME_NUMBER];
+	private BowlingFrame[] bowlingFrames = new BowlingFrame[10];
 	private int nextFrameNumber = 1;
 	private BowlingFrame currentFrame = null;
 
@@ -14,6 +12,10 @@ public class PlaygameBowling implements Bowling {
 	public boolean roll(int pin) {
 		if (invalidPinCount(pin)) {
 			throw new IllegalArgumentException();
+		}
+
+		if (isFinishGame()) {
+			throw new IllegalStateException();
 		}
 
 		if (isNewFrame()) {
@@ -37,7 +39,7 @@ public class PlaygameBowling implements Bowling {
 	}
 
 	private boolean isFinishGame() {
-		return currentFrame.isFinishFrame() && currentFrame.isLastFrame();
+		return currentFrame != null && currentFrame.isLastFrame() && currentFrame.isFinishFrame();
 	}
 
 	private void setBonusScore() {

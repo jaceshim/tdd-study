@@ -22,14 +22,11 @@ public class BowlingFrame {
 	public void shot(int pin) {
 		final Integer integerValue = Integer.valueOf(pin);
 
-
 		if (isFirstShot()) {
 			firstScore = integerValue;
-		} else {
+		} else if (secondScore == null) {
 			secondScore = integerValue;
-		}
-
-		if (isLastFrame() && isFinishSecondShot()) {
+		} else if (isLastFrame() && isFinishSecondShot()) {
 			thirdScore = integerValue;
 		}
 
@@ -54,7 +51,11 @@ public class BowlingFrame {
 	}
 
 	public boolean isFinishSecondShot() {
-		return getFirstScore() != null && getSecondScore() != null;
+		if (getFirstScore() == null) {
+			return false;
+		}
+
+		return getSecondScore() != null;
 	}
 
 	public boolean isFinishFrame() {
@@ -68,7 +69,7 @@ public class BowlingFrame {
 		if (getFirstScore().intValue() == STRIKE_SCORE || this.isSpare()) {
 			return getThirdScore() != null;
 		}
-		return false;
+		return getSecondScore() != null;
 	}
 
 	public boolean isSpare() {
