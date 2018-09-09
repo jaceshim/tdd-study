@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * X 두번 roll하여 스트라이크 처리시 다음 roll은 다른 frame 으로 처리된다.
  * X 스트라이크 더블 처리시 현재 프레임의 1구/2구 합산 score를 이전전 프레임의 score에 합산된다.
  * X 터기시에 이전/이전전 프레임의 score에 합산처리.
- * - 마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.
+ * X 마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.
  *
  * - 게임종료이후 roll()을 실행하면 InvalidStateException을 던진다.
  */
@@ -179,6 +179,4 @@ public class BowlingTest {
 
 		assertThat(isFinish).isTrue();
 	}
-
-
 }

@@ -29,33 +29,33 @@ public class PlaygameBowling implements Bowling {
 			this.nextFrameNumber = currentFrame.getFrameNumber() + 1;
 		}
 
-		if (isLastFrame() == false) {
+		if (currentFrame.isLastFrame() == false) {
 			setNextFrameNumber();
 		}
 
 		return isFinishGame();
 	}
 
-	private boolean isLastFrame() {
-		return currentFrame.getFrameNumber() == LAST_FRAME_NUMBER;
-	}
-
 	private boolean isFinishGame() {
-		return isLastFrame() && currentFrame.isFinishFrame();
+		return currentFrame.isFinishFrame() && currentFrame.isLastFrame();
 	}
 
 	private void setBonusScore() {
 		if (isSpareBonus()) {
-			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1], currentFrame.getFirstScore());
+			addScore(getBeforeBowlingFrame(-1), currentFrame.getFirstScore());
 		}
 
 		if (isDoubleBonus()) {
-			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 2], currentFrame.getFirstScore());
+			addScore(getBeforeBowlingFrame(-2), currentFrame.getFirstScore());
 		}
 
 		if (isStrikeBonus()) {
-			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1], currentFrame.getFrameScore());
+			addScore(getBeforeBowlingFrame(-1), currentFrame.getFrameScore());
 		}
+	}
+
+	private BowlingFrame getBeforeBowlingFrame(int beforeIndex) {
+		return bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) + beforeIndex];
 	}
 
 	private boolean isSpareBonus() {
@@ -63,7 +63,7 @@ public class PlaygameBowling implements Bowling {
 			return false;
 		}
 		if (currentFrame.isFinishFirstShot()) {
-			return bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1].isSpare();
+			return getBeforeBowlingFrame(-1).isSpare();
 		}
 
 		return false;
@@ -75,7 +75,7 @@ public class PlaygameBowling implements Bowling {
 		}
 
 		if (currentFrame.isFinishFrame()) {
-			return bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1].isStrike();
+			return getBeforeBowlingFrame(-1).isStrike();
 		}
 
 		return false;
@@ -88,8 +88,7 @@ public class PlaygameBowling implements Bowling {
 
 		if (currentFrame.isFinishFrame()) {
 			// 현재 frame 이전 2개의 frame이 strike인 경우 double
-			int currentFrameArrayIndex = getFrameArrayIndex(currentFrame.getFrameNumber());
-			return bowlingFrames[currentFrameArrayIndex - 2].isStrike() && bowlingFrames[currentFrameArrayIndex - 1].isStrike();
+			return getBeforeBowlingFrame(-2).isStrike() && getBeforeBowlingFrame(-1).isStrike();
 		}
 
 		return false;
@@ -121,7 +120,7 @@ public class PlaygameBowling implements Bowling {
 		if (currentFrame == null) {
 			return true;
 		}
-		if (currentFrame.getFrameNumber() == LAST_FRAME_NUMBER) {
+		if (currentFrame.isLastFrame()) {
 			return false;
 		}
 

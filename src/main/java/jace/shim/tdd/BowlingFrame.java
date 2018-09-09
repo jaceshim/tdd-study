@@ -29,7 +29,7 @@ public class BowlingFrame {
 			secondScore = integerValue;
 		}
 
-		if (isFinishSecondShot()) {
+		if (isLastFrame() && isFinishSecondShot()) {
 			thirdScore = integerValue;
 		}
 
@@ -39,7 +39,7 @@ public class BowlingFrame {
 	}
 
 	public boolean goNextFrame() {
-		if (this.frameNumber == LAST_FRAME_NUMBER) {
+		if (isLastFrame()) {
 			return false;
 		}
 		return isStrike() || secondScore != null;
@@ -61,7 +61,7 @@ public class BowlingFrame {
 		if (isFirstShot()) {
 			return false;
 		}
-		if (this.frameNumber < LAST_FRAME_NUMBER) {
+		if (isLastFrame() == false) {
 			return getFirstScore().intValue() == STRIKE_SCORE || getSecondScore() != null;
 		}
 
@@ -114,5 +114,9 @@ public class BowlingFrame {
 		}
 
 		this.frameScore = Integer.sum(this.frameScore.intValue(), addScore.intValue());
+	}
+
+	public boolean isLastFrame() {
+		return this.frameNumber == LAST_FRAME_NUMBER;
 	}
 }
