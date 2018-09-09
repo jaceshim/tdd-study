@@ -36,9 +36,4 @@ public class BowlingFrame {
 	public int getFrameNumber() {
 		return this.frameNumber;
 	}
-
-	public int getPrevFrameNumber() {
-		return this.frameNumber > 1 ? this.frameNumber - 1 : 0;
-	}
-
 }

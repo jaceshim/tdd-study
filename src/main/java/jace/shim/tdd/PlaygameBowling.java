@@ -7,7 +7,7 @@ public class PlaygameBowling implements Bowling {
 	private int score = 0;
 
 	private BowlingFrame[] bowlingFrames = new BowlingFrame[10];
-	private BowlingFrame currentFrame = new BowlingFrame(getStartFrameNumber());
+	private BowlingFrame currentFrame = createBowlingFrame();
 
 	public PlaygameBowling() {
 		this.bowlingFrames[0] = currentFrame;
@@ -31,13 +31,16 @@ public class PlaygameBowling implements Bowling {
 		}
 
 		if (currentFrame.isSecondShot()) {
-			final int startFrameNumber = getStartFrameNumber();
-			currentFrame = new BowlingFrame(startFrameNumber);
-			this.bowlingFrames[startFrameNumber - 1] = currentFrame;
+			currentFrame = createBowlingFrame();
+			this.bowlingFrames[currentFrame.getFrameNumber() - 1] = currentFrame;
 		}
 
 
 		return false;
+	}
+
+	private BowlingFrame createBowlingFrame() {
+		return new BowlingFrame(getStartFrameNumber());
 	}
 
 	private BowlingFrame getPrevFrame() {
