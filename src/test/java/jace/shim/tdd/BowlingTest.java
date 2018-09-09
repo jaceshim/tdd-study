@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * X 스트라이크 처리시 현재 프레임의 1구/2구 합산 score를  이전 프레임의 score에 합산된다.
  * X 거터/오픈/스페어 처리시 첫번째, 두번째 shot은 동일한 frame이 된다.
  * X 두번 roll하여 스트라이크 처리시 다음 roll은 다른 frame 으로 처리된다.
- * - 스트라이크 더블 처리시 현재 프레임의 1구/2구 합산 score를 이전전 프레임의 score에 합산된다.
+ * X 스트라이크 더블 처리시 현재 프레임의 1구/2구 합산 score를 이전전 프레임의 score에 합산된다.
  * - 마지막 roll()을 실행하면 true를 리턴하여 게임종료가 된다.
  *
  * - 게임종료이후 roll()을 실행하면 InvalidStateException을 던진다.
@@ -135,5 +135,26 @@ public class BowlingTest {
 		bowling.roll(1);
 
 		assertThat(bowling.score()).isEqualTo(56);
+
+		final Bowling bowling2 = new PlaygameBowling();
+		bowling2.roll(STRIKE_PIN_COUNT);
+		bowling2.roll(STRIKE_PIN_COUNT);
+		bowling2.roll(4);
+		bowling2.roll(2);
+
+		assertThat(bowling2.score()).isEqualTo(46);
+	}
+
+	@Test
+	@DisplayName("터키 처리시 현재 프레임의 이전전 프레임의 score에 합산된다.")
+	void When_Turkey_Then_Return_Append_Score1() {
+		final Bowling bowling = new PlaygameBowling();
+		bowling.roll(STRIKE_PIN_COUNT);
+		bowling.roll(STRIKE_PIN_COUNT);
+		bowling.roll(STRIKE_PIN_COUNT);
+		bowling.roll(8);
+		bowling.roll(1);
+
+		assertThat(bowling.score()).isEqualTo(86);
 	}
 }

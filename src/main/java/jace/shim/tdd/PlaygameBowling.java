@@ -36,10 +36,14 @@ public class PlaygameBowling implements Bowling {
 	private void setBonusScore() {
 		if (isSpareBonus()) {
 			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1], currentFrame.getFirstScore());
-		} else if (isStrikeBonus()) {
+		}
+
+		if (isDoubleBonus()) {
+			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 2], currentFrame.getFirstScore());
+		}
+
+		if (isStrikeBonus()) {
 			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber()) - 1], currentFrame.getFrameScore());
-		} else if (isDoubleBonus()) {
-			addScore(bowlingFrames[getFrameArrayIndex(currentFrame.getFrameNumber() - 2)], currentFrame.getFirstScore());
 		}
 	}
 
@@ -71,9 +75,13 @@ public class PlaygameBowling implements Bowling {
 			return false;
 		}
 
-		// 현재 frame 이전 2개의 frame이 strike인 경우 double
-		int currentFrameArrayIndex = getFrameArrayIndex(currentFrame.getFrameNumber());
-		return bowlingFrames[currentFrameArrayIndex - 2].isStrike() && bowlingFrames[currentFrameArrayIndex - 1].isStrike();
+		if (currentFrame.isFinishFrame()) {
+			// 현재 frame 이전 2개의 frame이 strike인 경우 double
+			int currentFrameArrayIndex = getFrameArrayIndex(currentFrame.getFrameNumber());
+			return bowlingFrames[currentFrameArrayIndex - 2].isStrike() && bowlingFrames[currentFrameArrayIndex - 1].isStrike();
+		}
+
+		return false;
 	}
 
 	private void addScore(BowlingFrame targetFrame, Integer addScore) {
