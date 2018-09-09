@@ -30,16 +30,19 @@ public class BowlingFrame {
 	}
 
 	public boolean isSpare() {
-		final int frameSumScore = Arrays.stream(shots).filter(score -> score != STRIKE_SCORE)
+		final int frameSumScore = Arrays.stream(shots)
+			.filter(shot -> shot != null)
+			.filter(shot -> shot != STRIKE_SCORE)
 			.mapToInt(Integer::intValue).sum();
 		return frameSumScore == SPARE_SCORE;
 	}
 
 	public boolean isStrike() {
 		final Integer findStrikeScore = Arrays.stream(shots)
+			.filter(shot -> shot != null)
 			.filter(shot -> shot == STRIKE_SCORE).findFirst().orElse(-1);
 
-		return findStrikeScore == -1 ? false : true;
+		return findStrikeScore.equals(-1) ? false : true;
 	}
 
 	public int getFrameNumber() {
