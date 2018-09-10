@@ -25,14 +25,10 @@ public class PlaygameBowling implements Bowling {
 
 		currentFrame.shot(pin);
 
-		setBonusScore();
+		checkBonusScore();
 
 		if (currentFrame.goNextFrame()) {
 			this.nextFrameNumber = currentFrame.getFrameNumber() + 1;
-		}
-
-		if (currentFrame.isLastFrame() == false) {
-			setNextFrameNumber();
 		}
 
 		return isFinishGame();
@@ -42,7 +38,7 @@ public class PlaygameBowling implements Bowling {
 		return currentFrame != null && currentFrame.isLastFrame() && currentFrame.isFinishFrame();
 	}
 
-	private void setBonusScore() {
+	private void checkBonusScore() {
 		if (isSpareBonus()) {
 			addScore(getBeforeBowlingFrame(-1), currentFrame.getFirstScore());
 		}
@@ -127,12 +123,6 @@ public class PlaygameBowling implements Bowling {
 		}
 
 		return currentFrame.getFrameNumber() != nextFrameNumber;
-	}
-
-	private void setNextFrameNumber() {
-		if (currentFrame.isStrike() || currentFrame.isFinishFrame()) {
-			this.nextFrameNumber = currentFrame.getFrameNumber() + 1;
-		}
 	}
 
 	private BowlingFrame createBowlingFrame(int frameNumber) {
